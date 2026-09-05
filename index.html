@@ -1,1 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fighters of WILDEN</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+  <!-- ==================== LOGIN ==================== -->
+  <section id="loginScreen" class="screen active">
+    <div class="title-card">
+      <div class="eyebrow">THE WORLD OF</div>
+      <h1>WILDEN</h1>
+      <p>FIGHTERS OF WILDEN</p>
+
+      <div class="login-box">
+        <input id="usernameInput" type="text" placeholder="USERNAME / EMAIL" autocomplete="username">
+        <input id="passwordInput" type="password" placeholder="PASSWORD" autocomplete="current-password">
+
+        <button onclick="login()">LOG IN</button>
+        <button class="secondary" onclick="showSignup()">SIGN UP</button>
+        <button class="ghost" onclick="guestLogin()">GUEST</button>
+
+        <p id="loginMessage" class="message"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SIGN UP ==================== -->
+  <section id="signupScreen" class="screen">
+    <div class="panel narrow">
+      <div class="eyebrow">CREATE ACCOUNT</div>
+      <h2>SIGN UP</h2>
+
+      <input id="signupUsername" type="text" placeholder="USERNAME">
+      <input id="signupEmail" type="email" placeholder="EMAIL">
+      <input id="signupPassword" type="password" placeholder="PASSWORD">
+
+      <button onclick="signup()">CREATE ACCOUNT</button>
+      <button class="ghost" onclick="showScreen('loginScreen')">BACK</button>
+
+      <p id="signupMessage" class="message"></p>
+    </div>
+  </section>
+
+  <!-- ==================== NEW GAME ==================== -->
+  <section id="newGameScreen" class="screen">
+    <div class="panel">
+      <div class="eyebrow">WELCOME TO WILDEN</div>
+      <h2>NEW GAME</h2>
+      <p class="subtitle">Choose your fighter. Your animal will be bound to this game profile.</p>
+
+      <button class="big-button" onclick="startCharacterShowcase()">START</button>
+    </div>
+  </section>
+
+  <!-- ==================== CHARACTER SHOWCASE ==================== -->
+  <section id="showcaseScreen" class="screen">
+    <div class="showcase">
+      <div class="eyebrow">CHARACTER SHOWCASE</div>
+      <h2>CHOOSE YOUR BEAST</h2>
+
+      <div class="character-stage">
+        <div class="character-card" data-animal="wolf" onclick="previewCharacter('wolf')">
+          <div class="animal-art wolf-art">🐺</div>
+          <h3>WOLF</h3>
+          <p>AGILE HUNTER</p>
+        </div>
+
+        <div class="character-card" data-animal="tiger" onclick="previewCharacter('tiger')">
+          <div class="animal-art tiger-art">🐯</div>
+          <h3>TIGER</h3>
+          <p>POWERFUL FIGHTER</p>
+        </div>
+
+        <div class="character-card" data-animal="fox" onclick="previewCharacter('fox')">
+          <div class="animal-art fox-art">🦊</div>
+          <h3>FOX</h3>
+          <p>TRICKSTER FIGHTER</p>
+        </div>
+      </div>
+
+      <button class="big-button" onclick="openCharacterSelection()">CONTINUE</button>
+    </div>
+  </section>
+
+  <!-- ==================== CHARACTER SELECTION ==================== -->
+  <section id="characterScreen" class="screen">
+    <div class="character-selection">
+      <div class="eyebrow">CHARACTER SELECTION</div>
+      <h2 id="selectionName">WOLF</h2>
+
+      <div id="selectionAnimal" class="selection-animal">🐺</div>
+      <p id="selectionDescription">AGILE HUNTER</p>
+
+      <div class="character-arrows">
+        <button onclick="cycleCharacter(-1)">◀</button>
+        <button onclick="cycleCharacter(1)">▶</button>
+      </div>
+
+      <button class="big-button" onclick="confirmCharacter()">SELECT</button>
+    </div>
+  </section>
+
+  <!-- ==================== TUTORIAL ==================== -->
+  <section id="tutorialScreen" class="screen">
+    <div class="panel tutorial-panel">
+      <div class="eyebrow">TRAINING</div>
+      <h2>TUTORIAL</h2>
+
+      <div id="tutorialContent">
+        <div class="tutorial-step active">
+          <h3>MOVE</h3>
+          <p><kbd>A</kbd> / <kbd>D</kbd> — Move left / right</p>
+          <p><kbd>W</kbd> — Jump</p>
+          <p><kbd>SPACE</kbd> — Dash</p>
+        </div>
+
+        <div class="tutorial-step">
+          <h3>DEFEND</h3>
+          <p><kbd>S+A</kbd> — Dodge left</p>
+          <p><kbd>S+D</kbd> — Dodge right</p>
+          <p><kbd>O</kbd> — Timing defense</p>
+        </div>
+
+        <div class="tutorial-step">
+          <h3>ATTACK</h3>
+          <p><kbd>J</kbd> — Bite</p>
+          <p><kbd>K</kbd> — Claw</p>
+          <p><kbd>I</kbd> — Pounce</p>
+          <p><kbd>L</kbd> — Heavy attack</p>
+        </div>
+      </div>
+
+      <div class="tutorial-controls">
+        <button class="ghost" onclick="tutorialPrevious()">BACK</button>
+        <span id="tutorialPage">1 / 3</span>
+        <button onclick="tutorialNext()">NEXT</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN MENU ==================== -->
+  <section id="menuScreen" class="screen">
+    <div class="menu-layout">
+      <div>
+        <div class="eyebrow">WELCOME BACK</div>
+        <h1 class="menu-title">WILDEN</h1>
+        <p id="menuUsername"></p>
+      </div>
+
+      <div class="menu-buttons">
+        <button class="big-button" onclick="startAIBattle()">PLAY</button>
+        <button onclick="openPvpMenu()">PVP</button>
+        <button onclick="openCharacters()">CHARACTERS</button>
+        <button onclick="openProfile()">PROFILE</button>
+        <button onclick="openSettings()">SETTINGS</button>
+        <button class="ghost" onclick="logout()">LOG OUT</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PVP MENU ==================== -->
+  <section id="pvpMenuScreen" class="screen">
+    <div class="panel">
+      <div class="eyebrow">PLAYER VS PLAYER</div>
+      <h2>VS PLAYER</h2>
+      <p class="subtitle">Matchmaking uses Beast King Level.</p>
+
+      <div class="level-display">
+        <span>BEAST KING</span>
+        <strong id="pvpLevel">LV. 1</strong>
+      </div>
+
+      <button class="big-button" onclick="findPvPMatch()">FIND MATCH</button>
+      <button class="ghost" onclick="showScreen('menuScreen')">BACK</button>
+    </div>
+  </section>
+
+  <!-- ==================== VS SCREEN ==================== -->
+  <section id="vsScreen" class="screen">
+    <div class="vs-stage">
+      <div id="vsPlayer" class="vs-fighter left">
+        <div id="vsPlayerAnimal" class="vs-animal">🐺</div>
+        <h2 id="vsPlayerName">WOLF</h2>
+      </div>
+
+      <div class="vs-center">
+        <div id="vsText">VS</div>
+        <div id="readyText">READY?</div>
+        <div id="fightText">FIGHT!</div>
+      </div>
+
+      <div id="vsOpponent" class="vs-fighter right">
+        <div id="vsOpponentAnimal" class="vs-animal">🐯</div>
+        <h2 id="vsOpponentName">TIGER</h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== BATTLE ==================== -->
+  <section id="battleScreen" class="screen battle-screen">
+
+    <div class="battle-hud">
+
+      <div class="hud-side">
+        <div class="fighter-label">
+          <span id="playerBattleName">WOLF</span>
+          <span id="playerBattleLevel">LV. 1</span>
+        </div>
+        <div class="hp-frame">
+          <div id="playerHpBar" class="hp-bar"></div>
+        </div>
+        <div class="hud-bottom">
+          <span id="playerHpText">90 / 90</span>
+          <span id="playerUltimate">ULTIMATE READY</span>
+        </div>
+      </div>
+
+      <div class="round-title">WILDEN</div>
+
+      <div class="hud-side opponent-hud">
+        <div class="fighter-label">
+          <span id="opponentBattleName">TIGER</span>
+          <span>AI</span>
+        </div>
+        <div class="hp-frame">
+          <div id="opponentHpBar" class="hp-bar"></div>
+        </div>
+        <div class="hud-bottom">
+          <span id="opponentHpText">95 / 95</span>
+          <span id="opponentUltimate">ULTIMATE READY</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="comboFeedback" class="combo-feedback">
+      <div class="combo-word">COMBO!</div>
+      <div id="comboName"></div>
+      <div id="comboDamage"></div>
+    </div>
+
+    <div id="cooldownMessage" class="cooldown-message">COOLING DOWN</div>
+
+    <div id="arena" class="arena">
+
+      <div class="arena-ground"></div>
+
+      <div id="playerFighter" class="fighter player-fighter">
+        <div class="fighter-shadow"></div>
+        <div class="fighter-emoji">🐺</div>
+        <div class="fighter-name-tag">YOU</div>
+      </div>
+
+      <div id="opponentFighter" class="fighter opponent-fighter">
+        <div class="fighter-shadow"></div>
+        <div class="fighter-emoji">🐯</div>
+        <div class="fighter-name-tag">OPPONENT</div>
+      </div>
+
+    </div>
+
+    <div class="battle-controls">
+      <div class="control-group">
+        <span>MOVE</span>
+        <kbd>A</kbd><kbd>D</kbd>
+        <kbd>W</kbd>
+      </div>
+      <div class="control-group">
+        <span>ATTACK</span>
+        <kbd>J</kbd><kbd>K</kbd><kbd>I</kbd><kbd>L</kbd>
+      </div>
+      <div class="control-group">
+        <span>DEFENSE</span>
+        <kbd>O</kbd>
+      </div>
+      <div class="control-group">
+        <span>DASH</span>
+        <kbd>SPACE</kbd>
+      </div>
+    </div>
+
+    <button id="pauseButton" class="pause-button" onclick="pauseBattle()">Ⅱ</button>
+
+    <div id="pauseOverlay" class="pause-overlay">
+      <div class="panel">
+        <h2>PAUSED</h2>
+        <button onclick="resumeBattle()">RESUME</button>
+        <button class="danger" onclick="exitBattle()">EXIT BATTLE</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ==================== RESULTS ==================== -->
+  <section id="resultsScreen" class="screen">
+    <div class="results-panel">
+      <div id="resultTitle" class="result-title">VICTORY!</div>
+
+      <div class="result-stat">
+        <span>DAMAGE DEALT</span>
+        <strong id="resultDamage">0</strong>
+      </div>
+
+      <div class="result-stat">
+        <span>COMBOS USED</span>
+        <strong id="resultCombos">0</strong>
+      </div>
+
+      <div class="result-stat">
+        <span>TIME</span>
+        <strong id="resultTime">00:00</strong>
+      </div>
+
+      <div class="result-stat">
+        <span>BEAST KING</span>
+        <strong id="resultProgress">+10</strong>
+      </div>
+
+      <button class="big-button" onclick="continueFromResults()">CONTINUE</button>
+    </div>
+  </section>
+
+  <!-- ==================== PROFILE ==================== -->
+  <section id="profileScreen" class="screen">
+    <div class="panel profile-panel">
+      <div class="eyebrow">GAME PROFILE</div>
+      <h2 id="profileUsername">PLAYER</h2>
+
+      <div class="profile-animal" id="profileAnimal">🐺</div>
+
+      <div class="profile-level">
+        <span>BEAST KING</span>
+        <strong id="profileLevel">LV. 1</strong>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-label">
+          <span>PROGRESS</span>
+          <span id="profilePoints">0 / 100</span>
+        </div>
+        <div class="progress-frame">
+          <div id="profileProgressBar" class="progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="record-grid">
+        <div>
+          <span>WINS</span>
+          <strong id="profileWins">0</strong>
+        </div>
+        <div>
+          <span>LOSSES</span>
+          <strong id="profileLosses">0</strong>
+        </div>
+      </div>
+
+      <button onclick="openBattleRecords()">BATTLE RECORDS</button>
+      <button class="ghost" onclick="showScreen('menuScreen')">BACK</button>
+    </div>
+  </section>
+
+  <!-- ==================== BATTLE RECORDS ==================== -->
+  <section id="recordsScreen" class="screen">
+    <div class="panel records-panel">
+      <div class="eyebrow">HISTORY</div>
+      <h2>BATTLE RECORDS</h2>
+
+      <div id="recordsList" class="records-list"></div>
+
+      <button class="ghost" onclick="openProfile()">BACK</button>
+    </div>
+  </section>
+
+  <!-- ==================== RECORD DETAIL ==================== -->
+  <section id="recordDetailScreen" class="screen">
+    <div class="panel">
+      <div class="eyebrow">BATTLE DETAIL</div>
+      <h2 id="detailResult">VICTORY!</h2>
+
+      <div id="recordDetail" class="record-detail"></div>
+
+      <button class="ghost" onclick="openBattleRecords()">BACK</button>
+    </div>
+  </section>
+
+  <!-- ==================== CHARACTERS ==================== -->
+  <section id="charactersScreen" class="screen">
+    <div class="panel">
+      <div class="eyebrow">YOUR FIGHTER</div>
+      <h2>CHARACTERS</h2>
+
+      <div id="characterDisplay" class="character-display">
+        <div id="characterDisplayEmoji" class="selection-animal">🐺</div>
+        <h3 id="characterDisplayName">WOLF</h3>
+      </div>
+
+      <p class="subtitle">Your animal is bound to this game profile.</p>
+
+      <button class="ghost" onclick="showScreen('menuScreen')">BACK</button>
+    </div>
+  </section>
+
+  <!-- ==================== SETTINGS ==================== -->
+  <section id="settingsScreen" class="screen">
+    <div class="panel">
+      <div class="eyebrow">OPTIONS</div>
+      <h2>SETTINGS</h2>
+
+      <label class="setting-row">
+        <span>VOLUME</span>
+        <input id="volumeSetting" type="range" min="0" max="100" value="80" oninput="saveSettings()">
+      </label>
+
+      <label class="setting-row checkbox-row">
+        <span>SOUND EFFECTS</span>
+        <input id="sfxSetting" type="checkbox" checked onchange="saveSettings()">
+      </label>
+
+      <button class="ghost" onclick="showScreen('menuScreen')">BACK</button>
+    </div>
+  </section>
+
+  <!-- ==================== SHADOW HUNTER ==================== -->
+  <section id="shadowScreen" class="screen">
+    <div class="shadow-story">
+      <div class="shadow-title">SHADOW HUNTER</div>
+      <div id="shadowAnimal" class="shadow-animal">🐺</div>
+      <p id="shadowText">
+        Your own shadow has awakened.
+      </p>
+      <button class="big-button" onclick="startShadowBattle()">FIGHT</button>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
