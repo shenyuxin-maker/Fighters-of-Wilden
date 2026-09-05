@@ -798,9 +798,12 @@ function ordinaryAttack(action) {
 function dealDamageToOpponent(damage, knockback = 1) {
   if (!battle || battle.finished) return;
 
-  if (isPlayerInvulnerable()) {
-    return;
-  }
+  if (
+  battle.playerInvulnerableUntil &&
+  battle.playerInvulnerableUntil > Date.now()
+) {
+  return;
+}
 
   battle.opponentHp -= damage;
   battle.damageDealt += damage;
