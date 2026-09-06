@@ -554,6 +554,7 @@ function initializeBattle(mode, opponentAnimal) {
 
     damageDealt: 0,
     combosUsed: 0,
+    combosUsedList: [],
 
     comboBuffer: [],
     comboTimes: [],
