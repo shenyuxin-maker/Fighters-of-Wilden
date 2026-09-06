@@ -968,6 +968,20 @@ function checkCombos() {
 function startCombo(combo) {
   battle.combosUsed++;
 
+  const existing = battle.combosUsedList.find(
+    item => item.name === combo.name
+  );
+
+  if (existing) {
+    existing.count++;
+  } else {
+    battle.combosUsedList.push({
+      name: combo.name,
+      input: [...combo.input],
+      count: 1
+    });
+  }
+
   battle.comboCooldowns[combo.name] =
     Date.now() + 7000;
 
