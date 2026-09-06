@@ -1421,6 +1421,7 @@ function finishBattle(playerWon) {
         : null,
     damage: battle.damageDealt,
     combos: battle.combosUsed,
+    comboDetails: battle.combosUsedList,
     time: timeSeconds,
     date: new Date().toLocaleString(),
     progress: progressGain
