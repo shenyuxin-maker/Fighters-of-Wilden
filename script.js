@@ -8,7 +8,7 @@ const CHARACTERS = {
   wolf: {
     name: "WOLF",
     emoji: "🐺",
-    hp: 150,
+    hp: 200,
     description: "AGILE HUNTER",
     attacks: {
       J: 8,
@@ -23,7 +23,7 @@ const CHARACTERS = {
   tiger: {
     name: "TIGER",
     emoji: "🐯",
-    hp: 160,
+    hp: 185,
     description: "POWERFUL FIGHTER",
     attacks: {
       J: 9,
@@ -38,7 +38,7 @@ const CHARACTERS = {
   fox: {
     name: "FOX",
     emoji: "🦊",
-    hp: 125,
+    hp: 190,
     description: "TRICKSTER FIGHTER",
     attacks: {
       J: 7,
