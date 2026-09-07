@@ -1788,3 +1788,84 @@ function formatTime(seconds) {
 document.addEventListener("DOMContentLoaded", () => {
   showScreen("loginScreen");
 });
+
+/* ==================== TOUCH CONTROLS ==================== */
+
+function initializeTouchControls() {
+  const buttons = document.querySelectorAll(
+    "#touchControls .touch-btn"
+  );
+
+  buttons.forEach(button => {
+
+    button.addEventListener("pointerdown", event => {
+      event.preventDefault();
+
+      if (!battle || battle.finished || battle.paused) {
+        return;
+      }
+
+      const action = button.dataset.touch;
+      const dodge = button.dataset.dodge;
+      const dash = button.dataset.dash;
+
+      button.setPointerCapture?.(event.pointerId);
+
+      /* HOLD MOVEMENT */
+      if (action === "A" || action === "D") {
+        battle.keys[action] = true;
+        return;
+      }
+
+      /* JUMP / ATTACK / DEFENSE */
+      if (action) {
+        performAction(action);
+
+        if (action === "O") {
+          performDefense();
+        }
+
+        return;
+      }
+
+      /* DODGE */
+      if (dodge) {
+        performDodge(Number(dodge));
+        return;
+      }
+
+      /* DASH */
+      if (dash) {
+        performDash();
+      }
+    });
+
+    button.addEventListener("pointerup", event => {
+      event.preventDefault();
+
+      const action = button.dataset.touch;
+
+      if (
+        battle &&
+        (action === "A" || action === "D")
+      ) {
+        battle.keys[action] = false;
+      }
+    });
+
+    button.addEventListener("pointercancel", event => {
+      const action = button.dataset.touch;
+
+      if (
+        battle &&
+        (action === "A" || action === "D")
+      ) {
+        battle.keys[action] = false;
+      }
+    });
+
+    button.addEventListener("contextmenu", event => {
+      event.preventDefault();
+    });
+  });
+}
