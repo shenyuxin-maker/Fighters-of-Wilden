@@ -1818,16 +1818,16 @@ function initializeTouchControls() {
       }
 
       /* JUMP / ATTACK / DEFENSE */
-      if (action) {
-        performAction(action);
+     if (action) {
 
-        if (action === "O") {
-          performDefense();
-        }
+  if (action === "O") {
+    performDefense();
+  } else {
+    performAction(action);
+  }
 
-        return;
-      }
-
+  return;
+}
       /* DODGE */
       if (dodge) {
         performDodge(Number(dodge));
