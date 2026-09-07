@@ -589,7 +589,8 @@ function initializeBattle(mode, opponentAnimal) {
 
   document.addEventListener("keydown", handleBattleKey);
   document.addEventListener("keyup", handleBattleKeyUp);
-
+  initializeTouchControls();
+   
   startBattleLoop();
 }
 
