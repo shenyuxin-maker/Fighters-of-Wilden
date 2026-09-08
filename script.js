@@ -1038,11 +1038,20 @@ function comboAnimation(combo) {
     }
 
     if (combo.damage > 0) {
-      dealDamageToOpponent(
-        combo.damage,
-        combo.knockback ? 2 : 1
-      );
-    }
+  let damage = combo.damage;
+
+  if (
+    battle.playerAnimal === "wolf" &&
+    battle.wolfUltimate
+  ) {
+    damage += 9;
+  }
+
+  dealDamageToOpponent(
+    damage,
+    combo.knockback ? 2 : 1
+  );
+}
 
     discoverCombo(combo);
 
