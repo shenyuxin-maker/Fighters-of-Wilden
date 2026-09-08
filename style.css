@@ -1163,3 +1163,36 @@ kbd {
     width: 88px;
   }
 }
+
+/* ==================== ULTIMATE EFFECTS ==================== */
+
+.fox-invisible {
+  opacity: 0 !important;
+  transition: opacity 0.25s ease;
+}
+
+#comboFeedback.show {
+  animation: ultimateFeedback 0.8s ease-out;
+}
+
+@keyframes ultimateFeedback {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+
+  30% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1;
+  }
+
+  70% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
