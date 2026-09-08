@@ -1034,8 +1034,9 @@ function comboAnimation(combo) {
     if (!battle || battle.finished) return;
 
     if (combo.damage === "REFLECT") {
-      return;
-    }
+  battle.comboLocked = false;
+  return;
+}
 
     if (combo.damage > 0) {
   let damage = combo.damage;
