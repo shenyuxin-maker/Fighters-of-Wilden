@@ -787,23 +787,31 @@ function ordinaryAttack(action) {
   if (action === "L") range = 9;
 
   if (distance <= range) {
-    const damage = data.attacks[action];
+    let damage = data.attacks[action];
+
+    /*
+      WOLF HOWL:
+      +9 damage to all normal attacks
+      while the Ultimate buff is active.
+    */
+    if (
+      battle.playerAnimal === "wolf" &&
+      battle.wolfUltimate
+    ) {
+      damage += 9;
+    }
 
     if (damage > 0) {
-      dealDamageToOpponent(damage, data.knockback);
+      dealDamageToOpponent(
+        damage,
+        data.knockback
+      );
     }
   }
 }
 
 function dealDamageToOpponent(damage, knockback = 1) {
   if (!battle || battle.finished) return;
-
-  if (
-  battle.playerInvulnerableUntil &&
-  battle.playerInvulnerableUntil > Date.now()
-) {
-  return;
-}
 
   battle.opponentHp -= damage;
   battle.damageDealt += damage;
