@@ -766,10 +766,8 @@ function performAction(action) {
   battle.lastAction = action;
   battle.lastActionTime = now;
 
-  ordinaryAttack(action);
-
-  checkCombos();
-}
+ ordinaryAttack(action);
+checkCombos();
 
 function ordinaryAttack(action) {
   if (!["J", "K", "I", "L"].includes(action)) return;
@@ -1191,16 +1189,26 @@ function showUltimateFeedback(name) {
 function updateUltimateCooldown() {
   if (!battle) return;
 
+  const element =
+    document.getElementById("playerUltimate");
+
+  if (!element) return;
+
   const ready =
     !battle.ultimateCooldown ||
     battle.ultimateCooldown <= Date.now();
 
-  document.getElementById("playerUltimate").textContent =
-    ready
-      ? "ULTIMATE READY"
-      : `ULTIMATE ${Math.ceil(
-          (battle.ultimateCooldown - Date.now()) / 1000
-        )}s`;
+  if (ready) {
+    element.textContent = "ULTIMATE READY";
+  } else {
+    const seconds = Math.ceil(
+      (battle.ultimateCooldown - Date.now()) / 1000
+    );
+
+    element.textContent = `ULTIMATE ${seconds}s`;
+  }
+
+  checkUltimateTimeout();
 }
 
 /* ==================== AI ==================== */
