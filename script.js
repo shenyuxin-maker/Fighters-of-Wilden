@@ -768,6 +768,7 @@ function performAction(action) {
 
  ordinaryAttack(action);
 checkCombos();
+}
 
 function ordinaryAttack(action) {
   if (!["J", "K", "I", "L"].includes(action)) return;
