@@ -641,7 +641,10 @@ function handleBattleKey(event) {
     event.preventDefault();
   }
 
-  if (event.repeat && ["J", "K", "I", "L", "O"].includes(key)) {
+  if (
+    event.repeat &&
+    ["J", "K", "I", "L", "O"].includes(key)
+  ) {
     return;
   }
 
@@ -657,44 +660,44 @@ function handleBattleKey(event) {
   }
 
   if (key === "W") {
+    attemptUltimate("W");
     performAction("W");
     return;
   }
 
   if (key === "S") {
+    attemptUltimate("S");
     return;
   }
 
   if (key === "J") {
+    attemptUltimate("J");
     performAction("J");
     return;
   }
 
   if (key === "K") {
+    attemptUltimate("K");
     performAction("K");
     return;
   }
 
   if (key === "I") {
+    attemptUltimate("I");
     performAction("I");
     return;
   }
 
   if (key === "L") {
+    attemptUltimate("L");
     performAction("L");
     return;
   }
 
   if (key === "O") {
+    attemptUltimate("O");
     performDefense();
   }
-}
-
-function handleBattleKeyUp(event) {
-  if (!battle) return;
-
-  const key = event.key.toUpperCase();
-  battle.keys[key] = false;
 }
 
 /* ==================== MOVEMENT ==================== */
