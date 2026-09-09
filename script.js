@@ -2,7 +2,7 @@
    WILDEN — GAME CORE
    ========================================================= */
 
-/* ==================== CHARACTER DATA ==================== */
+/* ==================== CHARACTER DATA ===================== */
 
 const CHARACTERS = {
   wolf: {
@@ -1121,80 +1121,267 @@ function recordInput(input) {
 
 /* ==================== ULTIMATE ==================== */
 
-function attemptUltimate() {
+function attemptUltimate(input) {
+  if (!battle || battle.finished || battle.paused) return;
+  if (battle.playerY > 0) return;
+
+  if (!battle.ultimateBuffer) {
+    battle.ultimateBuffer = [];
+  }
+
+  if (!battle.ultimateLastInputTime) {
+    battle.ultimateLastInputTime = 0;
+  }
+
+  const now = Date.now();
+
   /*
-    Foundation hook.
-    The final input recognizer will use the exact
-    character-specific sequences.
+    Reset the input sequence if the player
+    takes too long between inputs.
   */
+  if (
+    now - battle.ultimateLastInputTime >
+    1000
+  ) {
+    battle.ultimateBuffer = [];
+  }
+
+  battle.ultimateLastInputTime = now;
+  battle.ultimateBuffer.push(input);
+
+  const ultimate =
+    ULTIMATES[battle.playerAnimal];
+
+  if (!ultimate) {
+    battle.ultimateBuffer = [];
+    return;
+  }
+
+  let sequence = [...ultimate.input];
+
+  /*
+    Wolf requires the player to be standing
+    before W is pressed.
+  */
+  if (sequence[0] === "STILL") {
+    sequence.shift();
+  }
+
+  /*
+    Keep only the latest inputs needed
+    for this Ultimate.
+  */
+  if (
+    battle.ultimateBuffer.length >
+    sequence.length
+  ) {
+    battle.ultimateBuffer =
+      battle.ultimateBuffer.slice(
+        -sequence.length
+      );
+  }
+
+  /*
+    Check the complete sequence.
+  */
+  if (
+    battle.ultimateBuffer.length ===
+      sequence.length &&
+    battle.ultimateBuffer.every(
+      (key, index) =>
+        key === sequence[index]
+    )
+  ) {
+    battle.ultimateBuffer = [];
+    battle.ultimateLastInputTime = 0;
+
+    activateUltimate();
+  }
 }
 
-function useWolfUltimate() {
-  if (!canUseUltimate()) return;
+
+/* ==================== ACTIVATE ULTIMATE ==================== */
+
+function activateUltimate() {
+  if (!battle || battle.finished) return;
+
+  if (!canUseUltimate()) {
+    showUltimateCooldownMessage();
+
+    battle.ultimateBuffer = [];
+
+    return;
+  }
+
+  const animal = battle.playerAnimal;
 
   battle.ultimateCooldown =
     Date.now() + 30000;
+
+  battle.ultimateActive = true;
+  battle.comboLocked = true;
+
+  if (animal === "wolf") {
+    useWolfUltimate();
+    return;
+  }
+
+  if (animal === "tiger") {
+    useTigerUltimate();
+    return;
+  }
+
+  if (animal === "fox") {
+    useFoxUltimate();
+    return;
+  }
+
+  battle.ultimateActive = false;
+  battle.comboLocked = false;
+}
+
+
+/* ==================== WOLF HOWL ==================== */
+
+function useWolfUltimate() {
+  if (!battle) return;
+
+  battle.wolfUltimate = true;
 
   battle.ultimateActiveUntil =
     Date.now() + 10000;
 
-  battle.wolfUltimate = true;
-
   showUltimateFeedback("WOLF HOWL");
 
   setTimeout(() => {
-    if (battle) {
-      battle.wolfUltimate = false;
-    }
+    if (!battle) return;
+
+    battle.wolfUltimate = false;
+    battle.ultimateActiveUntil = 0;
+    battle.ultimateActive = false;
+    battle.comboLocked = false;
   }, 10000);
 }
 
-function useTigerUltimate() {
-  if (!canUseUltimate()) return;
 
-  battle.ultimateCooldown =
-    Date.now() + 30000;
+/* ==================== TIGER ROAR ==================== */
+
+function useTigerUltimate() {
+  if (!battle) return;
 
   showUltimateFeedback("TIGER ROAR");
 
-  dealDamageToOpponent(30, 2);
+  /*
+    Small cinematic delay before the hit.
+  */
+  setTimeout(() => {
+    if (!battle || battle.finished) return;
+
+    dealDamageToOpponent(30, 2);
+  }, 350);
+
+  setTimeout(() => {
+    if (!battle) return;
+
+    battle.ultimateActive = false;
+    battle.comboLocked = false;
+  }, 900);
 }
 
-function useFoxUltimate() {
-  if (!canUseUltimate()) return;
 
-  battle.ultimateCooldown =
-    Date.now() + 30000;
+/* ==================== SHADOW VANISH ==================== */
+
+function useFoxUltimate() {
+  if (!battle) return;
 
   battle.foxInvisibleUntil =
     Date.now() + 13000;
 
   showUltimateFeedback("SHADOW VANISH");
 
+  const fighter =
+    document.getElementById(
+      "playerFighter"
+    );
+
+  if (fighter) {
+    fighter.classList.add(
+      "fox-invisible"
+    );
+  }
+
   setTimeout(() => {
-    if (battle) {
-      battle.foxInvisibleUntil = 0;
+    if (!battle) return;
+
+    battle.foxInvisibleUntil = 0;
+
+    const currentFighter =
+      document.getElementById(
+        "playerFighter"
+      );
+
+    if (currentFighter) {
+      currentFighter.classList.remove(
+        "fox-invisible"
+      );
     }
+
+    battle.ultimateActive = false;
+    battle.comboLocked = false;
   }, 13000);
 }
 
+
+/* ==================== ULTIMATE CHECK ==================== */
+
 function canUseUltimate() {
-  if (!battle || battle.finished) return false;
+  if (!battle || battle.finished) {
+    return false;
+  }
 
-  if (battle.playerY > 0) return false;
+  if (battle.playerY > 0) {
+    return false;
+  }
 
-  return !battle.ultimateCooldown ||
-    battle.ultimateCooldown <= Date.now();
+  if (battle.comboLocked) {
+    return false;
+  }
+
+  return (
+    !battle.ultimateCooldown ||
+    battle.ultimateCooldown <= Date.now()
+  );
 }
+
+
+/* ==================== ULTIMATE FEEDBACK ==================== */
 
 function showUltimateFeedback(name) {
   const feedback =
-    document.getElementById("comboFeedback");
+    document.getElementById(
+      "comboFeedback"
+    );
 
-  document.getElementById("comboName").textContent =
-    name;
+  const nameElement =
+    document.getElementById(
+      "comboName"
+    );
 
-  document.getElementById("comboDamage").textContent =
+  const damageElement =
+    document.getElementById(
+      "comboDamage"
+    );
+
+  if (
+    !feedback ||
+    !nameElement ||
+    !damageElement
+  ) {
+    return;
+  }
+
+  nameElement.textContent = name;
+  damageElement.textContent =
     "ULTIMATE";
 
   feedback.classList.remove("show");
@@ -1204,11 +1391,37 @@ function showUltimateFeedback(name) {
   feedback.classList.add("show");
 }
 
+
+/* ==================== ULTIMATE COOLDOWN MESSAGE ==================== */
+
+function showUltimateCooldownMessage() {
+  const element =
+    document.getElementById(
+      "cooldownMessage"
+    );
+
+  if (!element) return;
+
+  element.textContent =
+    "ULTIMATE COOLING DOWN";
+
+  element.classList.remove("show");
+
+  void element.offsetWidth;
+
+  element.classList.add("show");
+}
+
+
+/* ==================== ULTIMATE COOLDOWN UI ==================== */
+
 function updateUltimateCooldown() {
   if (!battle) return;
 
   const element =
-    document.getElementById("playerUltimate");
+    document.getElementById(
+      "playerUltimate"
+    );
 
   if (!element) return;
 
@@ -1217,16 +1430,18 @@ function updateUltimateCooldown() {
     battle.ultimateCooldown <= Date.now();
 
   if (ready) {
-    element.textContent = "ULTIMATE READY";
+    element.textContent =
+      "ULTIMATE READY";
   } else {
     const seconds = Math.ceil(
-      (battle.ultimateCooldown - Date.now()) / 1000
+      (battle.ultimateCooldown -
+        Date.now()) /
+        1000
     );
 
-    element.textContent = `ULTIMATE ${seconds}s`;
+    element.textContent =
+      `ULTIMATE ${seconds}s`;
   }
-
-  checkUltimateTimeout();
 }
 
 /* ==================== AI ==================== */
