@@ -700,6 +700,13 @@ function handleBattleKey(event) {
   }
 }
 
+function handleBattleKeyUp(event) {
+  if (!battle) return;
+
+  const key = event.key.toUpperCase();
+  battle.keys[key] = false;
+}
+
 /* ==================== MOVEMENT ==================== */
 
 function updateMovement() {
