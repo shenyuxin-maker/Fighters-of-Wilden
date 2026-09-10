@@ -948,6 +948,34 @@ function checkCombos() {
 
   if (!available) return;
 
+  /*
+    If the current input could still become
+    an Ultimate, wait before triggering a normal combo.
+  */
+  const ultimate = ULTIMATES[animal];
+
+  if (ultimate) {
+    let ultimateSequence = [...ultimate.input];
+
+    if (ultimateSequence[0] === "STILL") {
+      ultimateSequence.shift();
+    }
+
+    const buffer = battle.ultimateBuffer || [];
+
+    const isUltimatePrefix =
+      buffer.length > 0 &&
+      buffer.length < ultimateSequence.length &&
+      buffer.every(
+        (key, index) =>
+          key === ultimateSequence[index]
+      );
+
+    if (isUltimatePrefix) {
+      return;
+    }
+  }
+
   for (const combo of available) {
     const input = combo.input;
 
@@ -2063,16 +2091,27 @@ function initializeTouchControls() {
       }
 
       /* JUMP / ATTACK / DEFENSE */
-     if (action) {
+      if (action) {
 
-  if (action === "O") {
-    performDefense();
-  } else {
-    performAction(action);
-  }
+        /*
+          Send the input to the Ultimate system first.
+          This makes touch controls behave like keyboard controls.
+        */
+        if (
+          ["W", "S", "J", "K", "I", "L", "O"].includes(action)
+        ) {
+          attemptUltimate(action);
+        }
 
-  return;
-}
+        if (action === "O") {
+          performDefense();
+        } else {
+          performAction(action);
+        }
+
+        return;
+      }
+
       /* DODGE */
       if (dodge) {
         performDodge(Number(dodge));
