@@ -1166,33 +1166,27 @@ kbd {
 
 /* ==================== ULTIMATE EFFECTS ==================== */
 
-.fox-invisible {
-  opacity: 0 !important;
-  transition: opacity 0.25s ease;
+.fox-shadow {
+  position: absolute;
+  opacity: 0.35;
+  filter: grayscale(1) brightness(0.25);
+  pointer-events: none;
+  z-index: 5;
+  animation: foxShadowFade 0.7s ease-out forwards;
 }
 
-#comboFeedback.show {
-  animation: ultimateFeedback 0.8s ease-out;
+.fox-shadow-delay {
+  opacity: 0.22;
 }
 
-@keyframes ultimateFeedback {
+@keyframes foxShadowFade {
   0% {
-    transform: translate(-50%, -50%) scale(0.5);
-    opacity: 0;
-  }
-
-  30% {
-    transform: translate(-50%, -50%) scale(1.15);
-    opacity: 1;
-  }
-
-  70% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
+    opacity: 0.35;
+    transform: translateX(0) scale(1);
   }
 
   100% {
-    transform: translate(-50%, -50%) scale(1);
     opacity: 0;
+    transform: translateX(-10px) scale(0.96);
   }
 }
