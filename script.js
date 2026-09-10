@@ -1344,6 +1344,12 @@ function useFoxUltimate() {
     );
 
   if (fighter) {
+    /*
+      Create several short-lived shadow afterimages
+      before Fox disappears.
+    */
+    createFoxShadow(fighter);
+
     fighter.classList.add(
       "fox-invisible"
     );
@@ -1369,7 +1375,48 @@ function useFoxUltimate() {
     battle.comboLocked = false;
   }, 13000);
 }
+function createFoxShadow(fighter) {
+  const parent = fighter.parentElement;
 
+  if (!parent) return;
+
+  const shadow = fighter.cloneNode(true);
+
+  shadow.removeAttribute("id");
+  shadow.classList.remove("fox-invisible");
+  shadow.classList.add("fox-shadow");
+
+  parent.appendChild(shadow);
+
+  setTimeout(() => {
+    shadow.remove();
+  }, 700);
+
+  /*
+    Add a second, slightly delayed afterimage.
+  */
+  setTimeout(() => {
+    if (!battle) return;
+
+    const secondShadow =
+      fighter.cloneNode(true);
+
+    secondShadow.removeAttribute("id");
+    secondShadow.classList.remove(
+      "fox-invisible"
+    );
+    secondShadow.classList.add(
+      "fox-shadow",
+      "fox-shadow-delay"
+    );
+
+    parent.appendChild(secondShadow);
+
+    setTimeout(() => {
+      secondShadow.remove();
+    }, 700);
+  }, 120);
+}
 
 /* ==================== ULTIMATE CHECK ==================== */
 
