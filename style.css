@@ -550,12 +550,19 @@ kbd {
   left: 72%;
 }
 
-.fighter-emoji {
-  font-size: 5.5rem;
-  text-align: center;
-  filter: drop-shadow(0 15px 8px rgba(0,0,0,0.4));
-}
+/* ==================== REAL FIGHTER ART ==================== */
 
+.fighter-image {
+  display: block;
+  width: 150px;
+  height: auto;
+  max-height: 150px;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 15px 8px rgba(0,0,0,0.4));
+  user-select: none;
+  -webkit-user-drag: none;
+}
 .fighter-shadow {
   position: absolute;
   bottom: 8px;
