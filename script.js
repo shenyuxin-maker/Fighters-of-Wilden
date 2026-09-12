@@ -1703,13 +1703,36 @@ function animateFighter(id, animationClass) {
   fighter.classList.add(animationClass);
 }
 
+/* ==================== FIGHTER ART ==================== */
+
 function setFighterEmoji(id, emoji) {
   const fighter = document.getElementById(id);
 
   const element =
     fighter.querySelector(".fighter-emoji");
 
-  element.textContent = emoji;
+  if (!element) return;
+
+  let animal = null;
+
+  if (battle) {
+    animal =
+      id === "playerFighter"
+        ? battle.playerAnimal
+        : battle.opponentAnimal;
+  }
+
+  if (animal === "wolf") {
+    element.innerHTML = `
+      <img
+        class="fighter-image"
+        src="assets/wolf.jpg"
+        alt="Black Wolf"
+      >
+    `;
+  } else {
+    element.textContent = emoji;
+  }
 }
 
 /* ==================== BATTLE END ==================== */
