@@ -1726,7 +1726,7 @@ function setFighterEmoji(id, emoji) {
     element.innerHTML = `
       <img
         class="fighter-image"
-        src="assets/wolf.jpg"
+        src="assets/wolfstanding.png"
         alt="Black Wolf"
       >
     `;
