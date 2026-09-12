@@ -563,6 +563,7 @@ kbd {
   user-select: none;
   -webkit-user-drag: none;
 }
+
 .fighter-shadow {
   position: absolute;
   bottom: 8px;
